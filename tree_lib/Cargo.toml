@@ -12,8 +12,7 @@ borsh.workspace = true
 borsh-derive.workspace = true
 solana-program.workspace = true
 
-
 [dev-dependencies]
-hex = "0.4.3"
+hex.workspace = true
 solana-program-test.workspace = true
 solana-sdk.workspace = true

@@ -1,6 +1,8 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use {solana_hash::Hash, solana_sha256_hasher::hashv};
 
+pub const TREE_PROGRAM_SEED: &[u8] = b"tree";
+
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub enum TreeInstruction {
     GetInfo,

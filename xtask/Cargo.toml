@@ -6,6 +6,15 @@ edition = "2021"
 [dependencies]
 tree_lib = { path = "../tree_lib" }
 
-getopt3 = "2.3.0"
+hex.workspace = true
+borsh.workspace = true
+solana-program.workspace = true
+solana-client.workspace = true
+solana-transaction-status-client-types.workspace = true
+solana-sdk.workspace = true
+
+color-eyre = "0.6"
+clap = "4.5.31"
+dirs = "6.0.0"
 xtasks = "0.0.2"
 xtaskops = "0.4.2"

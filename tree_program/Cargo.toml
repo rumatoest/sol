@@ -13,10 +13,10 @@ tree_lib = { path = "../tree_lib" }
 borsh.workspace = true
 borsh-derive.workspace = true
 solana-program.workspace = true
-solana-sdk.workspace = true
 
 [dev-dependencies]
 solana-hash = "=2.2.1"
+solana-sdk.workspace = true
 
 solana-program-test.workspace = true
 

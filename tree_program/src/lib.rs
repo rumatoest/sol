@@ -3,19 +3,19 @@ use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint,
     entrypoint::ProgramResult,
-    example_mocks::solana_sdk::system_instruction,
     msg,
     program::invoke,
     program::invoke_signed,
+    program_error::ProgramError,
     pubkey::Pubkey,
+    rent::Rent,
+    system_instruction,
+    sysvar::Sysvar,
 };
-use solana_sdk::{program_error::ProgramError, rent::Rent, sysvar::Sysvar};
 
-use tree_lib::{MerkleTree, TreeInstruction};
+use tree_lib::{MerkleTree, TreeInstruction, TREE_PROGRAM_SEED};
 
 entrypoint!(process_instruction);
-
-const SEED: &[u8] = b"tree";
 
 pub fn process_instruction(
     program_id: &Pubkey,
@@ -30,8 +30,10 @@ pub fn process_instruction(
     let pda_account = next_account_info(accounts_iter)?;
     let system_program = next_account_info(accounts_iter)?;
 
-    let (pda, pda_bump) =
-        Pubkey::find_program_address(&[SEED, &funding_account.key.to_bytes()], program_id);
+    let (pda, pda_bump) = Pubkey::find_program_address(
+        &[TREE_PROGRAM_SEED, &funding_account.key.to_bytes()],
+        program_id,
+    );
 
     // Ensure provided PDA matches derived PDA
     if pda != *pda_account.key {
@@ -84,7 +86,7 @@ fn create_pda_space<'a>(
         program_id,    // Owner of the account
     );
 
-    let signers_seeds: &[&[u8]; 3] = &[SEED, &payer.key.to_bytes(), &[bump]];
+    let signers_seeds: &[&[u8]; 3] = &[TREE_PROGRAM_SEED, &payer.key.to_bytes(), &[bump]];
 
     invoke_signed(
         &create_ix,
@@ -190,6 +192,7 @@ fn get_tree_info(pda: &AccountInfo) -> ProgramResult {
 
 #[cfg(test)]
 mod test {
+
     use super::*;
 
     use borsh::to_vec;
@@ -210,8 +213,10 @@ mod test {
 
         let (mut banks_client, payer, mut recent_blockhash) = program_test.start().await;
 
-        let (pda, _bump) =
-            Pubkey::find_program_address(&[SEED, &payer.pubkey().to_bytes()], &program_id);
+        let (pda, _bump) = Pubkey::find_program_address(
+            &[TREE_PROGRAM_SEED, &payer.pubkey().to_bytes()],
+            &program_id,
+        );
 
         // #1 getting info
         let transaction = create_signed_transaction(
