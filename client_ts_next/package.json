@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@solana/compat": "^2.1.0",
+    "@solana/kit": "^2.1.0",
+    "gill": "^0.5.0"
+  }
+}

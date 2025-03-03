@@ -1,0 +1,22 @@
+[package]
+name = "tree_program"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+name = "tree_program"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+tree_lib = { path = "../tree_lib" }
+
+borsh.workspace = true
+borsh-derive.workspace = true
+solana-program.workspace = true
+solana-sdk.workspace = true
+
+[dev-dependencies]
+solana-hash = "=2.2.1"
+
+solana-program-test.workspace = true
+

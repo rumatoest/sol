@@ -1,0 +1,19 @@
+[package]
+name = "tree_lib"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+fast-math = "0.1"
+solana-hash = "=2.2.1"
+solana-sha256-hasher = "=2.2.1"
+
+borsh.workspace = true
+borsh-derive.workspace = true
+solana-program.workspace = true
+
+
+[dev-dependencies]
+hex = "0.4.3"
+solana-program-test.workspace = true
+solana-sdk.workspace = true

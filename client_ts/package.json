@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@solana-developers/helpers": "^2.7.0",
+    "@solana/web3.js": "^1.98.0",
+    "esrun": "^3.2.26"
+  }
+}
