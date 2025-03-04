@@ -7,6 +7,10 @@ edition = "2021"
 name = "tree_program"
 crate-type = ["cdylib", "lib"]
 
+[features]
+default = []
+sbf = []
+
 [dependencies]
 tree_lib = { path = "../tree_lib" }
 
@@ -15,8 +19,9 @@ borsh-derive.workspace = true
 solana-program.workspace = true
 
 [dev-dependencies]
+gag = "1.0.0"
+# solana-lo
 solana-hash = "=2.2.1"
+solana-banks-interface.workspace = true
 solana-sdk.workspace = true
-
 solana-program-test.workspace = true
-

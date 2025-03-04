@@ -192,12 +192,13 @@ fn get_tree_info(pda: &AccountInfo) -> ProgramResult {
 
 #[cfg(test)]
 mod test {
-
     use super::*;
 
     use borsh::to_vec;
+    use solana_banks_interface::TransactionMetadata;
     use solana_hash::Hash;
     use solana_program_test::*;
+
     use solana_sdk::{
         instruction::{AccountMeta, Instruction},
         pubkey::Pubkey,
@@ -209,7 +210,7 @@ mod test {
     async fn test_tree() {
         let program_id = Pubkey::new_unique();
         let mut program_test = ProgramTest::default();
-        program_test.add_program("tree", program_id, processor!(process_instruction));
+        program_test.add_program("tree_program", program_id, processor!(process_instruction));
 
         let (mut banks_client, payer, mut recent_blockhash) = program_test.start().await;
 
@@ -234,6 +235,7 @@ mod test {
 
         // Should not fail
         assert!(matches!(tx_result.result, Ok(_)), "{:?}", tx_result);
+        assert_metadata_message(tx_result.metadata, "EMPTY");
 
         let pda_account = banks_client.get_account(pda).await.unwrap();
 
@@ -257,6 +259,7 @@ mod test {
             .unwrap();
 
         assert!(matches!(tx_result.result, Ok(_)), "{:?}", tx_result);
+        assert_metadata_message(tx_result.metadata, "Init with value");
 
         let pda_account = banks_client.get_account(pda).await.unwrap();
         assert!(matches!(pda_account, Some(_)));
@@ -285,6 +288,7 @@ mod test {
             .unwrap();
 
         assert!(matches!(tx_result.result, Ok(_)), "{:?}", tx_result);
+        assert_metadata_message(tx_result.metadata, "Appending value");
 
         let pda_account = banks_client.get_account(pda).await.unwrap();
         assert!(matches!(pda_account, Some(_)));
@@ -316,6 +320,30 @@ mod test {
 
         // Should not fail
         assert!(matches!(tx_result.result, Ok(_)), "{:?}", tx_result);
+        assert_metadata_message(tx_result.metadata, "Tree size 2");
+    }
+
+    #[cfg(not(feature = "sbf"))]
+    fn assert_metadata_message(_: Option<TransactionMetadata>, contains: &str) {
+        eprintln!(
+            "NOT SBF! Outpud omitted for msg!(). Can't check : \"{}\"",
+            contains
+        );
+    }
+
+    #[cfg(feature = "sbf")]
+    fn assert_metadata_message(metadata: Option<TransactionMetadata>, contains: &str) {
+        let check = if let Some(meta) = &metadata {
+            meta.log_messages.iter().any(|log| log.contains(contains))
+        } else {
+            false
+        };
+
+        assert!(
+            check,
+            "String {} not found in metada: {:?}",
+            contains, metadata
+        );
     }
 
     fn create_signed_transaction(
