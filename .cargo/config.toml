@@ -1,2 +1,3 @@
 [alias]
 xtask = "run --package xtask --"
+test-program="test-sbf --features sbf -- --nocapture"
